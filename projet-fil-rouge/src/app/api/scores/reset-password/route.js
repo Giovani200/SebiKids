@@ -3,26 +3,24 @@ import connectDB from '@/lib/db';
 import User from '@/app/models/User.model';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import { parseJsonBody, resetPasswordSchema } from '@/server/validation';
 
 export const POST = async (req) => {
+  const { data, errorResponse } = await parseJsonBody(req, resetPasswordSchema);
+  if (errorResponse) return errorResponse;
+  const { token, newPassword } = data;
+
   await connectDB();
-
-  const { email, token, newPassword } = await req.json();
-
-  if (!email || !token || !newPassword) {
-    return NextResponse.json({ message: "Tous les champs sont requis." }, { status: 400 });
-  }
 
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
   const user = await User.findOne({
-    email,
     resetPasswordToken: hashedToken,
     resetPasswordExpires: { $gt: Date.now() }
   });
 
   if (!user) {
-    return NextResponse.json({ message: "Token invalide ou expiré." }, { status: 404 });
+    return NextResponse.json({ message: "Lien invalide ou expiré." }, { status: 400 });
   }
 
   // Mise à jour du mot de passe

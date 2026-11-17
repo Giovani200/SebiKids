@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import '../../i18n/client'; // Assurez-vous que le fichier i18n est correctement importé
+import '../../i18n/client';
 import { useTranslation } from 'react-i18next';
+
+const PARENTAL_CONSENT_AGE = 13;
 
 export default function RegisterForm() {
     const { t } = useTranslation();
@@ -15,10 +17,12 @@ export default function RegisterForm() {
     const [emailParent, setEmailParent] = useState('');
     const [showParentEmail, setShowParentEmail] = useState(false);
     const [message, setMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const handleRegister = async (e) => {
         e.preventDefault();
         setMessage('');
+        setIsSuccess(false);
 
         try {
             // Validation basique
@@ -27,8 +31,8 @@ export default function RegisterForm() {
             }
 
             // Vérifier l'âge pour l'email parent
-            if (parseInt(age) < 14 && !emailParent) {
-                return setMessage("L'email d'un parent est requis pour les moins de 14 ans.");
+            if (parseInt(age) < PARENTAL_CONSENT_AGE && !emailParent) {
+                return setMessage("L'email d'un parent est requis pour les moins de 13 ans.");
             }
 
             // Afficher un message de chargement
@@ -42,7 +46,6 @@ export default function RegisterForm() {
                 age: parseInt(age),
                 parentEmail: showParentEmail ? emailParent : ""  // ✅ Renommé pour correspondre à l'API
             };
-            console.log("Données envoyées:", userData);
 
             const res = await fetch('/api/auth/register', {
                 method: 'POST',
@@ -53,19 +56,12 @@ export default function RegisterForm() {
             const data = await res.json();
 
             if (!res.ok) {
-                console.log("Réponse du serveur:", data);
                 return setMessage(data.message || "Erreur lors de l'inscription");
             }
 
-            // Inscription réussie
-            setMessage('Inscription réussie !');
-
-            // Redirection après délai
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 2000);
-        } catch (error) {
-            console.log("Erreur:", error);
+            setIsSuccess(true);
+            setMessage(data.message);
+        } catch {
             setMessage("Problème de connexion au serveur");
         }
     };
@@ -73,7 +69,7 @@ export default function RegisterForm() {
     const handleAgeChange = (e) => {
         const value = e.target.value;
         setAge(value);
-        setShowParentEmail(parseInt(value) < 14);
+        setShowParentEmail(parseInt(value) < PARENTAL_CONSENT_AGE);
     };
 
      return (
@@ -222,8 +218,8 @@ export default function RegisterForm() {
                     )}
 
                     {message && (
-                        <div className={`${message.includes(t('register.success')) ? 'bg-green-50 border-green-500 text-green-700' : 'bg-orange-50 border-orange-500 text-orange-700'} border-r-4 p-4 rounded-lg animate-fadeInUp flex items-center`}>
-                            <span className="mr-2 text-xl">{message.includes(t('register.success')) ? '✅' : '⚠️'}</span>
+                        <div className={`${isSuccess ? 'bg-green-50 border-green-500 text-green-700' : 'bg-orange-50 border-orange-500 text-orange-700'} border-r-4 p-4 rounded-lg animate-fadeInUp flex items-center`}>
+                            <span className="mr-2 text-xl">{isSuccess ? '✅' : '⚠️'}</span>
                             <p className="text-sm font-medium">{message}</p>
                         </div>
                     )}

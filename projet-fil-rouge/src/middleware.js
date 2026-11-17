@@ -1,25 +1,33 @@
 import { NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
+const jwtSecret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+async function hasValidToken(token) {
+  try {
+    await jwtVerify(token, jwtSecret, { algorithms: ['HS256'] });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Optimistic gate only: it checks the token signature and expiry, not the admin
+ * role, which is not in the token. Authorization is enforced by requireAdmin()
+ * in the API routes.
+ */
 export async function middleware(request) {
-  const path = request.nextUrl.pathname;
-  
-  // Protection des routes admin
-  if (path.startsWith('/admin')) {
-    const token = request.cookies.get('token')?.value;
-    
-    // Si pas de token, rediriger vers la page de connexion admin
-    if (!token) {
-      return NextResponse.redirect(new URL('/admin-login', request.url));
-    }
-    
-    // Si on a un token, on laisse passer et on vérifie côté serveur
-    // La vérification se fera dans le layout de l'admin
+  const token = request.cookies.get('token')?.value;
+  if (token && (await hasValidToken(token))) {
     return NextResponse.next();
   }
-  
-  return NextResponse.next();
+
+  const response = NextResponse.redirect(new URL('/admin-login', request.url));
+  if (token) response.cookies.delete('token');
+  return response;
 }
 
 export const config = {
-  matcher: ['/admin/:path*']
+  matcher: ['/admin/:path*'],
 };
