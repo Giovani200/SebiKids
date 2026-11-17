@@ -4,29 +4,31 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import User from '@/app/models/User.model';
+import { loginSchema, parseJsonBody } from '@/server/validation';
+
+const INVALID_CREDENTIALS = { message: 'Email ou mot de passe incorrect' };
+
+/**
+ * Compared against when the email is unknown, so the response time does not
+ * reveal whether an account exists.
+ */
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('timing-equalizer', 10);
 
 export const POST = async (req) => {
+  const { data, errorResponse } = await parseJsonBody(req, loginSchema);
+  if (errorResponse) return errorResponse;
+  const { email, password } = data;
+
   await connectDB();
 
-  const body = await req.json();
-  const { email, password } = body;
-
-  if (!email || !password) {
-    return NextResponse.json({ message: "Il manque des champs" }, { status: 400 });
-  }
-
   const user = await User.findOne({ email });
-  if (!user) {
-    return NextResponse.json({ message: "Utilisateur non trouvé" }, { status: 404 });
+  const isMatch = await bcrypt.compare(password, user?.password ?? DUMMY_PASSWORD_HASH);
+  if (!user || !isMatch) {
+    return NextResponse.json(INVALID_CREDENTIALS, { status: 401 });
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    return NextResponse.json({ message: "Mot de passe incorrect" }, { status: 401 });
-  }
-
-  if (!user.isParentApproved) {
-    return NextResponse.json({ message: "Le compte n'a pas encore été validé par les parents." }, { status: 403 });
+  if (!user.isActivated) {
+    return NextResponse.json({ message: "Compte pas encore activé. Utilisez le lien reçu par email (ou envoyé à votre parent)." }, { status: 403 });
   }
 
   // Génération du token JWT
@@ -51,7 +53,6 @@ export const POST = async (req) => {
       id: user._id,
       firstName: user.firstName,
       age: user.age,
-      isParentApproved: user.isParentApproved,
     }
   });
 };

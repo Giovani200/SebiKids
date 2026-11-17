@@ -36,9 +36,16 @@ const userSchema = new mongoose.Schema({
     },
     lowercase: true,
   },
-  isParentApproved: {
+  isActivated: {
     type: Boolean,
     default: false,
+  },
+  activationTokenHash: {
+    type: String,
+    index: true,
+  },
+  activationExpiresAt: {
+    type: Date,
   },
   password: {
     type: String,
@@ -49,7 +56,8 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
   resetPasswordToken: {
-    type: String
+    type: String,
+    index: true,
   },
   resetPasswordExpires: {
     type: Date

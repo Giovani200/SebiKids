@@ -2,11 +2,15 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import User from '@/app/models/User.model';
 import bcrypt from 'bcrypt';
+import { requireAdmin } from '@/server/auth';
 
 // GET - Récupérer un utilisateur spécifique
 export async function GET(request, { params }) {
+    const { errorResponse } = await requireAdmin();
+    if (errorResponse) return errorResponse;
+
     try {
-        const { id } = params;
+        const { id } = await params;
         await connectDB();
 
         const user = await User.findById(id).select('-password');
@@ -21,14 +25,17 @@ export async function GET(request, { params }) {
         return NextResponse.json(user);
     } catch (error) {
         console.error('Erreur récupération utilisateur:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
     }
 }
 
 // PUT - Mettre à jour un utilisateur
 export async function PUT(request, { params }) {
+    const { errorResponse } = await requireAdmin();
+    if (errorResponse) return errorResponse;
+
     try {
-        const { id } = params;
+        const { id } = await params;
         const { firstName, lastName, email, password, age, isAdmin } = await request.json();
 
         await connectDB();
@@ -61,14 +68,17 @@ export async function PUT(request, { params }) {
         });
     } catch (error) {
         console.error('Erreur mise à jour utilisateur:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
     }
 }
 
 // DELETE - Supprimer un utilisateur
 export async function DELETE(request, { params }) {
+    const { errorResponse } = await requireAdmin();
+    if (errorResponse) return errorResponse;
+
     try {
-        const { id } = params;
+        const { id } = await params;
 
         await connectDB();
 
@@ -84,6 +94,6 @@ export async function DELETE(request, { params }) {
         return NextResponse.json({ message: 'Utilisateur supprimé avec succès' });
     } catch (error) {
         console.error('Erreur suppression utilisateur:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
     }
 }

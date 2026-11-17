@@ -18,10 +18,6 @@ const RewardSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  prompt: {
-    type: String,
-    required: true
-  },
   title: {
     type: String,
     default: 'Nouvelle récompense'

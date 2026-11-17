@@ -25,28 +25,9 @@ export default function AdminDashboard() {
                     throw new Error(`Erreur ${response.status}: ${response.statusText}`);
                 }
 
-                const data = await response.json();
-                console.log('Stats reçues:', data); // Debug
-                setStats(data);
+                setStats(await response.json());
             } catch (error) {
-                console.error('Erreur lors de la récupération des statistiques:', error);
                 setError(error.message);
-                // Utiliser des données de démonstration en cas d'erreur
-                setStats({
-                    totalUsers: 12,
-                    newUsersToday: 3,
-                    totalGamesPlayed: 156,
-                    activeUsers: 8,
-                    mostPlayedGames: [
-                        { name: 'sebi-run', count: 89 },
-                        { name: 'james-hibou', count: 67 }
-                    ],
-                    topPlayers: [
-                        { userName: 'Alice', gameSlug: 'sebi-run', score: 450 },
-                        { userName: 'Bob', gameSlug: 'james-hibou', score: 320 }
-                    ],
-                    registrationTrend: []
-                });
             } finally {
                 setIsLoading(false);
             }
@@ -97,22 +78,16 @@ export default function AdminDashboard() {
         );
     }
 
-    // Afficher l'erreur si elle existe
     if (error) {
         return (
-            <div className="space-y-8">
-                <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-                    <div className="flex items-center">
-                        <span className="text-red-500 text-2xl mr-3">⚠️</span>
-                        <div>
-                            <h3 className="text-lg font-semibold text-red-800">Erreur de chargement</h3>
-                            <p className="text-red-600">{error}</p>
-                            <p className="text-sm text-red-500 mt-1">Affichage des données de démonstration</p>
-                        </div>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+                <div className="flex items-center">
+                    <span className="text-red-500 text-2xl mr-3">⚠️</span>
+                    <div>
+                        <h3 className="text-lg font-semibold text-red-800">Impossible de charger les statistiques</h3>
+                        <p className="text-red-600">{error}</p>
                     </div>
                 </div>
-                {/* Afficher le reste du dashboard avec les données de démo */}
-                {renderDashboardContent()}
             </div>
         );
     }

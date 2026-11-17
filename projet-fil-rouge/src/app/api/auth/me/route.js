@@ -30,7 +30,7 @@ export async function GET() {
                 age: user.age
             }
         });
-    } catch (err) {
-        return NextResponse.json({ isAuthenticated: false, error: err.message }, { status: 401 });
+    } catch {
+        return NextResponse.json({ isAuthenticated: false }, { status: 401 });
     }
 }

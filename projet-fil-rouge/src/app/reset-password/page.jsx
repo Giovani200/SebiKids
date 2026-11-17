@@ -15,13 +15,12 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
 
   const token = searchParams.get('token');
-  const email = searchParams.get('email');
 
   const handleSubmit = async (e) => {
   e.preventDefault();
   setMessage('');
 
-  if (!token || !email) {
+  if (!token) {
     return setMessage("Lien invalide ou expiré.");
   }
 
@@ -33,7 +32,7 @@ export default function ResetPasswordPage() {
   const res = await fetch('/api/scores/reset-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, token, newPassword }),
+    body: JSON.stringify({ token, newPassword }),
   });
 
   const data = await res.json();
