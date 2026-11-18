@@ -17,7 +17,6 @@ export default function LeaderboardPage() {
     const [topGlobal, setTopGlobal] = useState([]);
     const [topSebi, setTopSebi] = useState([]);
     const [topJames, setTopJames] = useState([]);
-    const [bestByGameSebi, setBestByGameSebi] = useState([]);
     const [sebiPlayers, setSebiPlayers] = useState([]);
     const router = useRouter();
 
@@ -40,7 +39,6 @@ export default function LeaderboardPage() {
                 setTopGlobal(data.topGlobal || []);
                 setTopSebi(data.topSebi || []);
                 setTopJames(data.topJames || []);
-                setBestByGameSebi(data.bestByGameSebi || []);
                 setSebiPlayers(data.sebiPlayers || []);
             }
             setLoading(false);
@@ -129,11 +127,11 @@ export default function LeaderboardPage() {
                                         <div className="w-full h-full rounded-full border-4 border-silver shadow-lg overflow-hidden bg-white">
                                             <img 
                                                 src={topGlobal[1]?.user?.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=player2"} 
-                                                alt={`Avatar de ${topGlobal[1]?.user?.firstName || "Joueur 2"}`}
+                                                alt={`Avatar de ${topGlobal[1]?.user?.displayName || "Joueur 2"}`}
                                                 className="w-full h-full object-cover"
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(topGlobal[1]?.user?.firstName || 'player2')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
+                                                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(topGlobal[1]?.user?.displayName || 'player2')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
                                                 }}
                                             />
                                         </div>
@@ -142,7 +140,7 @@ export default function LeaderboardPage() {
                                         </div>
                                     </div>
                                     <div className="bg-gradient-to-r from-slate-200 to-gray-200 rounded-xl px-5 py-3 text-center shadow-lg transform -rotate-1">
-                                        <p className="font-bold text-lg text-gray-800">{topGlobal[1]?.user?.firstName || '---'}</p>
+                                        <p className="font-bold text-lg text-gray-800">{topGlobal[1]?.user?.displayName || '---'}</p>
                                         <p className="text-md font-bold text-gray-600">{topGlobal[1]?.totalScore || 0} {t('leaderboard.points')}</p>
                                     </div>
                                     <div className="h-24 w-20 bg-gradient-to-b from-silver to-gray-300 rounded-t-xl mt-3 shadow-lg" aria-hidden="true"></div>
@@ -155,11 +153,11 @@ export default function LeaderboardPage() {
                                         <div className="relative w-full h-full rounded-full border-4 border-yellow-400 shadow-lg overflow-hidden bg-white">
                                             <img 
                                                 src={topGlobal[0]?.user?.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=player1"} 
-                                                alt={`Avatar de ${topGlobal[0]?.user?.firstName || "Joueur 1"}`}
+                                                alt={`Avatar de ${topGlobal[0]?.user?.displayName || "Joueur 1"}`}
                                                 className="w-full h-full object-cover"
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(topGlobal[0]?.user?.firstName || 'player1')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
+                                                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(topGlobal[0]?.user?.displayName || 'player1')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
                                                 }}
                                             />
                                         </div>
@@ -168,7 +166,7 @@ export default function LeaderboardPage() {
                                         </div>
                                     </div>
                                     <div className="bg-gradient-to-r from-yellow-200 to-amber-200 rounded-xl px-6 py-4 text-center shadow-lg transform rotate-1">
-                                        <p className="font-bold text-xl text-amber-800">{topGlobal[0]?.user?.firstName || '---'}</p>
+                                        <p className="font-bold text-xl text-amber-800">{topGlobal[0]?.user?.displayName || '---'}</p>
                                         <p className="text-lg font-bold text-amber-700">{topGlobal[0]?.totalScore || 0} {t('leaderboard.points')}</p>
                                     </div>
                                     <div className="h-32 w-24 bg-gradient-to-b from-yellow-400 to-amber-400 rounded-t-xl mt-3 shadow-lg" aria-hidden="true"></div>
@@ -180,11 +178,11 @@ export default function LeaderboardPage() {
                                         <div className="w-full h-full rounded-full border-4 border-amber-600 shadow-lg overflow-hidden bg-white">
                                             <img 
                                                 src={topGlobal[2]?.user?.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=player3"} 
-                                                alt={`Avatar de ${topGlobal[2]?.user?.firstName || "Joueur 3"}`}
+                                                alt={`Avatar de ${topGlobal[2]?.user?.displayName || "Joueur 3"}`}
                                                 className="w-full h-full object-cover"
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(topGlobal[2]?.user?.firstName || 'player3')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
+                                                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(topGlobal[2]?.user?.displayName || 'player3')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
                                                 }}
                                             />
                                         </div>
@@ -193,7 +191,7 @@ export default function LeaderboardPage() {
                                         </div>
                                     </div>
                                     <div className="bg-gradient-to-r from-amber-200 to-orange-200 rounded-xl px-4 py-2 text-center shadow-lg transform -rotate-2">
-                                        <p className="font-bold text-base text-amber-800">{topGlobal[2]?.user?.firstName || '---'}</p>
+                                        <p className="font-bold text-base text-amber-800">{topGlobal[2]?.user?.displayName || '---'}</p>
                                         <p className="text-sm font-bold text-amber-700">{topGlobal[2]?.totalScore || 0} {t('leaderboard.points')}</p>
                                     </div>
                                     <div className="h-20 w-18 bg-gradient-to-b from-amber-600 to-orange-400 rounded-t-xl mt-3 shadow-lg" aria-hidden="true"></div>
@@ -232,17 +230,17 @@ export default function LeaderboardPage() {
                                                     </div>
                                                     <div className="relative w-14 h-14 rounded-full overflow-hidden border-3 border-orange-300 shadow-md">
                                                         <img
-                                                            src={player.user?.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.firstName || 'player')}`}
-                                                            alt={`Avatar de ${player.user?.firstName || 'Joueur'}`}
+                                                            src={player.user?.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.displayName || 'player')}`}
+                                                            alt={`Avatar de ${player.user?.displayName || 'Joueur'}`}
                                                             className="w-full h-full object-cover"
                                                             onError={(e) => {
                                                                 e.target.onerror = null;
-                                                                e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.firstName || 'player')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
+                                                                e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.displayName || 'player')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
                                                             }}
                                                         />
                                                     </div>
                                                     <div>
-                                                        <h3 className="font-bold text-lg text-gray-800">{player.user?.firstName || 'Joueur'}</h3>
+                                                        <h3 className="font-bold text-lg text-gray-800">{player.user?.displayName || 'Joueur'}</h3>
                                                         <div className="flex space-x-1 text-xs text-gray-500">
                                                             <span><span role="img" aria-hidden="true">🎮</span> {player.gamesPlayed || 0} {player.gamesPlayed === 1 ? t('leaderboard.gamesSingular') : t('leaderboard.games')}</span>
                                                         </div>
@@ -286,17 +284,17 @@ export default function LeaderboardPage() {
                                                 </div>
                                                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-amber-300 shadow-md">
                                                     <img
-                                                        src={player.user?.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.firstName || 'player')}`}
-                                                        alt={`Avatar de ${player.user?.firstName || 'Joueur'}`}
+                                                        src={player.user?.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.displayName || 'player')}`}
+                                                        alt={`Avatar de ${player.user?.displayName || 'Joueur'}`}
                                                         className="w-full h-full object-cover"
                                                         onError={(e) => {
                                                             e.target.onerror = null;
-                                                            e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.firstName || 'player')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
+                                                            e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.displayName || 'player')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
                                                         }}
                                                     />
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-bold text-gray-800">{player.user?.firstName || 'Joueur'}</h3>
+                                                    <h3 className="font-bold text-gray-800">{player.user?.displayName || 'Joueur'}</h3>
                                                     <div className="flex space-x-1 text-xs text-gray-500">
                                                         <span><span role="img" aria-hidden="true">🎮</span> {player.gamesPlayed || 0} {player.gamesPlayed === 1 ? t('leaderboard.gamesSingular') : t('leaderboard.games')}</span>
                                                     </div>
@@ -346,17 +344,17 @@ export default function LeaderboardPage() {
                                                     </div>
                                                     <div className="relative w-14 h-14 rounded-full overflow-hidden border-3 border-blue-300 shadow-md">
                                                         <img
-                                                            src={player.user?.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.firstName || 'player')}`}
-                                                            alt={`Avatar de ${player.user?.firstName || 'Joueur'}`}
+                                                            src={player.user?.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.displayName || 'player')}`}
+                                                            alt={`Avatar de ${player.user?.displayName || 'Joueur'}`}
                                                             className="w-full h-full object-cover"
                                                             onError={(e) => {
                                                                 e.target.onerror = null;
-                                                                e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.firstName || 'player')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
+                                                                e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(player.user?.displayName || 'player')}&backgroundColor=ffdfbf,ffd5dc,d1d4f9,c0aede,b6e3f4`;
                                                             }}
                                                         />
                                                     </div>
                                                     <div>
-                                                        <h3 className="font-bold text-lg text-gray-800">{player.user?.firstName || 'Joueur'}</h3>
+                                                        <h3 className="font-bold text-lg text-gray-800">{player.user?.displayName || 'Joueur'}</h3>
                                                         <div className="flex space-x-1 text-xs text-gray-500">
                                                             <span><span role="img" aria-hidden="true">🎮</span> {player.gamesPlayed || 0} {player.gamesPlayed === 1 ? t('leaderboard.gamesSingular') : t('leaderboard.games')}</span>
                                                         </div>
